@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { db, storage } from '../Firebase/FirebaseConfig'
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import './OrderSection.css'
-import EditIcon from '@mui/icons-material/Edit';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 
@@ -12,13 +11,16 @@ const OrderSection = () => {
     const [keyword, setKeyword] = useState('')
     const getallorder = async () => {
         setAllOrders([]);
-        const querySnapshot = await getDocs(collection(db, "UserOrders"));
+        const querySnapshot = await getDocs(collection(db, "Orders"));
+        let temp = []
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-            setAllOrders((prev) => [...prev, doc.data()])
+            // // console.log(doc.id, " => ", doc.data());
+            // setAllOrders((prev) => [...prev, doc.data()])
             // setAllOrders((prev) => [doc.data()])
+            temp.push(doc.data())
         });
+        setAllOrders(temp)
     }
     useEffect(() => {
         getallorder()

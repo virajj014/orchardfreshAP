@@ -4,6 +4,8 @@ import AddFoodData from './components/AddFoodData';
 import OrderSection from './components/OrderSection';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ShowDetails from './components/ShowDetails';
+import ManageProducts from './components/Manage/ManageProducts';
+import ManageSlider from './components/Manage/ManageSlider';
 
 function App() {
   return (
@@ -15,8 +17,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<OrderSection />} />
-        <Route path="/addfood" element={<AddFoodData />} />
+        <Route path="/addproduct" element={<AddFoodData />} />
         <Route path="/orderdetails/:orderid" element={<ShowDetails />} />
+        <Route path="/manageproducts" element={<ManageProducts />} />
+        <Route path="/orders" element={<OrderSection />} />
+        <Route path="/manageslider" element={<ManageSlider />} />
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,7 @@
 # Getting Started with Create React App
+ <!-- npm install -g firebase-tools   -->
+ <!-- firebase login             -->
+ <!-- npm run build        firebase init   firebase deploy    https://foodapp1-e11ad.web.app             -->
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

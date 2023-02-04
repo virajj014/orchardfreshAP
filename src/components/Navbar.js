@@ -4,15 +4,22 @@ import './Navbar.css'
 const Navbar = () => {
     return (
         <div className="navbar">
-            <div className="nav-left">
-                <h1>Foodie</h1>
+           <div className="nav-left">
+                <h1>Orchard Fresh</h1>
             </div>
             <div className="nav-right">
-                <Link to="/" style={{ textDecoration: 'none' }}>
+                <Link to='/orders' style={{ textDecoration: 'none' }}>
                     <p>Orders</p>
                 </Link>
-                <Link to="/addfood" style={{ textDecoration: 'none' }}>
-                    <p>Add Food</p>
+                <Link to='/addproduct' style={{ textDecoration: 'none' }}>
+                    <p>Add Product</p>
+                </Link>
+                <Link to='/manageproducts' style={{ textDecoration: 'none' }}>
+                    <p>Manage Products</p>
+                </Link>
+
+                <Link to='/manageslider' style={{ textDecoration: 'none' }}>
+                    <p>Manage Slider</p>
                 </Link>
             </div>
         </div>

@@ -6,14 +6,14 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <div className="nav-left">
-                <h1>Foodie</h1>
+                <h1>Orchard Fresh</h1>
             </div>
             <div className="nav-right">
                 <Link to='/orders' style={{ textDecoration: 'none' }}>
                     <p>Orders</p>
                 </Link>
                 <Link to='/addfood' style={{ textDecoration: 'none' }}>
-                    <p>Add Food</p>
+                    <p>Add Product</p>
                 </Link>
             </div>
         </div>
