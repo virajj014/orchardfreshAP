@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const OrderSection = () => {
     const [allorders, setAllOrders] = useState([])
-    const [allordersstatus, setAllOrdersStatus] = useState('')
+    const [allordersstatus, setAllOrdersStatus] = useState('pending')
     const [keyword, setKeyword] = useState('')
     const getallorder = async () => {
         setAllOrders([]);
@@ -30,7 +30,7 @@ const OrderSection = () => {
 
 
     const changeOrderStatus = (id, orderdata, status) => {
-        const docRef = doc(db, "UserOrders", id);
+        const docRef = doc(db, "Orders", id);
         const data = {
             ...orderdata,
             orderstatus: status
@@ -45,42 +45,78 @@ const OrderSection = () => {
         getallorder()
     }
 
-    const changeDeliveryboyName = (id, orderdata, boyname) => {
-        console.log(id, orderdata, boyname)
-        const docRef = doc(db, "UserOrders", id);
-        const data = {
-            ...orderdata,
-            deliveryboy_name: boyname
-        }
-        setDoc(docRef, data).then(() => {
-            alert("Document successfully written!");
-        })
-            .catch((error) => {
-                alert("Error writing document: ", error);
-            })
 
-        getallorder()
+    const [deliveryboyname, setDeliveryboyname] = useState('')
+    const [deliveryboyphone, setDeliveryboyphone] = useState('')
+
+    const changeDeliveryboyName = (id, orderdata) => {
+
+        if (deliveryboyname === '') {
+            alert('Delivery Boy Name is required')
+            return
+        }
+
+        else {
+            const docRef = doc(db, "Orders", id);
+            const data = {
+                ...orderdata,
+                deliveryboy_name: deliveryboyname
+            }
+            setDoc(docRef, data).then(() => {
+                alert("Document successfully written!");
+            })
+                .catch((error) => {
+                    alert("Error writing document: ", error);
+                })
+
+            getallorder()
+            setDeliveryboyname('')
+        }
     }
 
 
-    const changeDeliveryboyPhone = (id, orderdata, boyphone) => {
-        console.log(id, orderdata, boyphone)
-        const docRef = doc(db, "UserOrders", id);
-        const data = {
-            ...orderdata,
-            deliveryboy_phone: boyphone
-        }
-        setDoc(docRef, data).then(() => {
-            alert("Document successfully written!");
-        })
-            .catch((error) => {
-                alert("Error writing document: ", error);
-            })
+    const changeDeliveryboyPhone = (id, orderdata) => {
 
-        getallorder()
+        if (deliveryboyphone === '') {
+            alert('Delivery Boy Phone is required')
+            return
+        }
+
+        else {
+            const docRef = doc(db, "Orders", id);
+            const data = {
+                ...orderdata,
+                deliveryboy_phone: deliveryboyphone
+            }
+            setDoc(docRef, data).then(() => {
+                alert("Document successfully written!");
+                getallorder()
+                setDeliveryboyphone('')
+            })
+                .catch((error) => {
+                    alert("Error writing document: ", error);
+                })
+
+
+        }
     }
     // console.log(allordersstatus)
 
+    const changePaystatus = (id, orderdata, status) => {
+        const docRef = doc(db, "Orders", id);
+        const data = {
+            ...orderdata,
+            paymentstatus: status
+        }
+        setDoc(docRef, data).then(() => {
+            alert("Document successfully written!");
+        })
+            .catch((error) => {
+                alert("Error writing document: ", error);
+            })
+
+        getallorder()
+    }
     return (
         <div className="order-section">
             <Navbar />
@@ -89,11 +125,13 @@ const OrderSection = () => {
             <div className="order-s1">
                 <input type="text" placeholder="Search by order id or delivery status" onChange={(e) => setKeyword(e.target.value)} className='searchbar' />
 
+
+
                 <div className="order-s1-in">
                     <p>Sort by Order Status</p>
                     <select className='ordertxt' onChange={(e) => setAllOrdersStatus(e.target.value)}>
-                        <option value="">All</option>
                         <option value="pending">Pending</option>
+                        <option value="">All</option>
                         <option value="ontheway">On the way</option>
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
@@ -101,20 +139,21 @@ const OrderSection = () => {
                 </div>
             </div>
 
-            <div className='order__container'>
-                <div className="order-row_card1">
-                    <p className='ordertxt'> OrderId</p>
-                    <p className='ordertxt'>Paid</p>
-                    <p className='ordertxt'>Delivery Status</p>
-                    <p className='ordertxt'>Delivery Boy Name</p>
-                    <p className='ordertxt'>Delivery Boy Phone</p>
 
-                    <p className='ordertxt'>Cost</p>
-                    <button>Show Details</button>
-
-                </div>
-                <div className="order__container">
-
+            <table>
+                <thead>
+                    <tr>
+                        <td>OrderId</td>
+                        <td>Pay Type</td>
+                        <td>Pay Status</td>
+                        <td>Delivery Status</td>
+                        <td>DB Name</td>
+                        <td>DB Phone</td>
+                        <td>Cost</td>
+                        <td>Details</td>
+                    </tr>
+                </thead>
+                <tbody>
                     {allorders.filter((val) => {
                         if (allordersstatus === "") {
                             return val
@@ -128,19 +167,69 @@ const OrderSection = () => {
                             return val
                         }
                     }).map((order) => (
-                        <div className="order-row_card">
-                            <p className='ordertxt'> {order.orderid}</p>
-                            <p className='ordertxt'> {order.orderpayment}</p>
-                            {/* <p className='ordertxt'> {order.orderstatus}</p> */}
-                            <div className="order-card-in">
-                                {order.orderstatus === 'pending' &&
-                                    <select className='ordertxt' onChange={(e) => changeOrderStatus(order.orderid, order, e.target.value)}>
-                                        <option value="pending">Pending</option>
-                                        <option value="ontheway">On the way</option>
-                                        <option value="delivered">Delivered</option>
-                                        <option value="cancelled">Cancelled</option>
-                                    </select>
+                        <tr>
+                            <td>{order.orderid}</td>
+                            <td>{order.orderpayment}</td>
+                            <td>
+                                {order.paymentstatus === 'pending' && 
+                                <select className='ordertxt' onChange={(e) => changePaystatus(order.orderid, order, e.target.value)}>
+                                    <option value="pending">Pending</option>
+                                    <option value="success">Success</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="refunded">Refunded</option>
+                                    <option value="notrefunded">Not Refunded</option>
+                                </select>
                                 }
+
+                                {order.paymentstatus === 'success' &&
+                                <select className='ordertxt' onChange={(e) => changePaystatus(order.orderid, order, e.target.value)}>
+                                    <option value="success">Success</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="refunded">Refunded</option>
+                                    <option value="notrefunded">Not Refunded</option>
+                                </select>
+                                }
+
+                                {order.paymentstatus === 'failed' &&
+                                <select className='ordertxt' onChange={(e) => changePaystatus(order.orderid, order, e.target.value)}>
+                                    <option value="failed">Failed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="success">Success</option>
+                                    <option value="refunded">Refunded</option>
+                                    <option value="notrefunded">Not Refunded</option>
+                                </select>
+
+                                }
+
+                                {order.paymentstatus === 'refunded' &&
+                                <select className='ordertxt' onChange={(e) => changePaystatus(order.orderid, order, e.target.value)}>
+                                    <option value="refunded">Refunded</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="success">Success</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="notrefunded">Not Refunded</option>
+                                </select>
+                                }
+
+                                {order.paymentstatus === 'notrefunded' &&
+                                <select className='ordertxt' onChange={(e) => changePaystatus(order.orderid, order, e.target.value)}>
+                                    <option value="notrefunded">Not Refunded</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="success">Success</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                                }
+                            </td>
+                            <td>{order.orderstatus === 'pending' &&
+                                <select className='ordertxt' onChange={(e) => changeOrderStatus(order.orderid, order, e.target.value)}>
+                                    <option value="pending">Pending</option>
+                                    <option value="ontheway">On the way</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            }
                                 {order.orderstatus === 'ontheway' &&
                                     <select className='ordertxt' onChange={(e) => changeOrderStatus(order.orderid, order, e.target.value)}>
                                         <option value="ontheway">On the way</option>
@@ -159,26 +248,36 @@ const OrderSection = () => {
                                     </select>
                                 }
 
-                                {order.orderstatus === 'cancelled' && <p> {order.orderstatus}</p>}
-
-                            </div>
-                            {order.deliveryboy_name ? <p className='ordertxt'> {order.deliveryboy_name}</p> :
-                                <input type="text" placeholder="Enter deliveryboy_name" className='orderinput' onBlur={(e) => changeDeliveryboyName(order.orderid, order, e.target.value)} />
-                            }
-                            {
+                                {order.orderstatus === 'cancelled' && <p> {order.orderstatus}</p>}</td>
+                            <td>
+                                {order.deliveryboy_name ? <p className='ordertxt'> {order.deliveryboy_name}</p> :
+                                    <div className='deliveryboy'>
+                                        <input type="text" placeholder="Enter deliveryboy name"
+                                            onChange={(e) => { setDeliveryboyname(e.target.value) }}
+                                        />
+                                        <button onClick={(e) => changeDeliveryboyName(order.orderid, order)} >save</button>
+                                    </div>
+                                }
+                            </td>
+                            <td>{
                                 order.deliveryboy_phone ? <p className='ordertxt'> {order.deliveryboy_phone}</p> :
-                                    <input type="text" placeholder="Enter deliveryboy_phone" onBlur={(e) => changeDeliveryboyPhone(order.orderid, order, e.target.value)} className='orderinput' />
+                                    <div className='deliveryboy'>
+                                        <input type="text" placeholder="Enter deliveryboy phone"
+
+                                            onChange={(e) => { setDeliveryboyphone(e.target.value) }}
+                                        />
+                                        <button onClick={(e) => changeDeliveryboyPhone(order.orderid, order)} >save</button>
+                                    </div>
+
                             }
-                            <p className='ordertxt'>{order.ordercost}</p>
-
-                            <Link to={`/orderdetails/${order.orderid}`}><button>Show Details</button></Link>
-                        </div>
-                    ))
-                    }
-                </div>
-            </div>
-
-        </div>
+                            </td>
+                            <td>{order.ordercost}</td>
+                            <td><Link to={`/orderdetails/${order.orderid}`}><button>Show Details</button></Link></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div >
     )
 }
 

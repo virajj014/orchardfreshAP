@@ -12,7 +12,7 @@ const ShowOrderSpecific = () => {
     const [orderdata, setOrderData] = useState([])
 
     const getorderdata = async () => {
-        const docRef = doc(db, "UserOrders", orderid);
+        const docRef = doc(db, "Orders", orderid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {

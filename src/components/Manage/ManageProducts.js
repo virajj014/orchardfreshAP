@@ -44,6 +44,7 @@ const ManageProducts = () => {
     const [productImage, setproductImage] = useState('')
     const [productCategory, setproductCategory] = useState('')
     const [productpriceunit, setproductpriceunit] = useState('')
+    const [productdescription, setproductdescription] = useState('')
     const [docid, setdocid] = useState('')
     const [editimage, seteditimage] = useState(false)
 
@@ -55,6 +56,7 @@ const ManageProducts = () => {
         setproductCategory(product.productCategory)
         setproductpriceunit(product.productpriceunit)
         setproductImage(product.productImageUrl)
+        setproductdescription(product.productdescription)
         setdocid(product.id)
         seteditpage(true)
 
@@ -74,7 +76,7 @@ const ManageProducts = () => {
         // else if (editimage == true) {
         //     alert(productImage)
         // }
-        console.log(productImage)
+        console.log(productdescription)
         if (editimage == false || productImage == '') {
             //update doc
             updateDoc(doc(db, "productData", docid), {
@@ -82,7 +84,8 @@ const ManageProducts = () => {
                 productPrice: productPrice,
                 productCategory: productCategory,
                 productpriceunit: productpriceunit,
-                productImageUrl: productImage
+                productImageUrl: productImage,
+                productdescription: productdescription
             })
                 .then(() => {
                     alert('product updated')
@@ -106,7 +109,8 @@ const ManageProducts = () => {
                                 productPrice: productPrice,
                                 productCategory: productCategory,
                                 productpriceunit: productpriceunit,
-                                productImageUrl: url
+                                productImageUrl: url,
+                                productdescription: productdescription
                             })
                                 .then(() => {
                                     alert('product updated')
@@ -193,6 +197,7 @@ const ManageProducts = () => {
                             setproductpriceunit('')
                             setproductImage('')
                             setdocid('')
+                            setproductdescription('')
                         }}
                     >Go Back</buttton>
                     <div className="form-outer">
@@ -243,6 +248,12 @@ const ManageProducts = () => {
                                 }}
                             />
                             <br />
+
+                            <label>Product Description</label>
+                            <textarea name="product_description" id="" cols="30" rows="10"
+                                value={productdescription}
+                                onChange={(e) => { setproductdescription(e.target.value) }}
+                            />
 
                             <button onClick={(e) => {
                                 handleSubmit(e)

@@ -12,6 +12,7 @@ const AddproductData = () => {
     const [productImage, setproductImage] = useState(null)
     const [productCategory, setproductCategory] = useState('')
     const [productpriceunit, setproductpriceunit] = useState('')
+    const [productdescription, setproductdescription] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -37,7 +38,8 @@ const AddproductData = () => {
                                 productImageUrl: url,
                                 productCategory,
                                 productpriceunit,
-                                id: new Date().getTime().toString()
+                                id: new Date().getTime().toString(),
+                                productdescription
                             }
 
                             // console.log(productData)
@@ -102,7 +104,13 @@ const AddproductData = () => {
                     <input type="file" name="product_image"
                         onChange={(e) => { setproductImage(e.target.files[0]) }}
                     />
+
                     <br />
+
+                    <label>Product Description</label>
+                    <textarea name="product_description" rows="5" cols="30"
+                        onChange={(e) => { setproductdescription(e.target.value) }}
+                    ></textarea>
 
                     <button onClick={handleSubmit}>Add product</button>
                 </form>
